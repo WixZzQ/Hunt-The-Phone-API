@@ -1,27 +1,46 @@
-const loadPhone = async () => {
-    const res = await fetch('https://openapi.programming-hero.com/api/phones?search=iphone')
+const loadPhone = async (searchText='13', isShowAll) => {
+    const res = await fetch(`https://openapi.programming-hero.com/api/phones?search=${searchText}`);
     const data = await res.json()
     const phones = data.data;
     // console.log(phones)
-    displayPhone(phones)
+    displayPhone(phones, isShowAll)
 }
 
-const displayPhone = phones => {
+const displayPhone = (phones, isShowAll) => {
     // console.log(phones)
 
         // 1. Get the ID
     const phoneContainer = document.getElementById('phone-container')
+    // Clear phone container cards before adding new cards
+    phoneContainer.textContent = '';
+    
+    // display show all button if there are more than 12 phones
+    const showAllContainer = document.getElementById('show-all-container')
+    if(phones.length > 12 && !isShowAll){
+        showAllContainer.classList.remove('hidden')
+    }
+    else{
+        showAllContainer.classList.add('hidden')
+    }
 
+// console.log('show all', isShowAll)
+
+
+// diplay only first 12 phones if not show all
+
+if(!isShowAll){
+    phones = phones.slice(0,12)
+}
 
     phones.forEach(phone => {
-        console.log(phone)
+        // console.log(phone)
         // 2. Create a div
         const phoneCard = document.createElement('div')
         phoneCard.classList = `w-full max-w-sm bg-gray-100 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700`
         // 3. Set inner html
         phoneCard.innerHTML = `
         <a href="#">
-                        <img class="p-8 rounded-t-lg" src="${phone.image}" alt="product image" />
+                        <img class="p-10 rounded-t-lg" src="${phone.image}" alt="product image" />
                     </a>
                     <div class="px-5 pb-5">
                         <a href="#">
@@ -49,14 +68,113 @@ const displayPhone = phones => {
                         </div>
                         <div class="flex items-center justify-between">
                             <span class="text-3xl font-bold text-gray-900 dark:text-white">$599</span>
-                            <a href="#" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add to cart</a>
+                            <button onclick="handleShowDetail('${phone.slug}')" href="#" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Detail Info</button>
                         </div>
                     </div>
                 </div>  
         `;
         // 4. Append child 
         phoneContainer.appendChild(phoneCard)
-    })
+    });
+
+    // hide loading spinner
+    toggleLoadingSpinner(false);
 }
 
+const handleShowDetail = async (id) => {
+    // console.log('Hehe boi',id)
+    // load single phone data
+    const res = await fetch(`https://openapi.programming-hero.com/api/phone/${id}`)
+    const data = await res.json()
+    const phone = data.data;
+    showPhoneDetails(phone)
+}
+
+    const showPhoneDetails = (phone) => {
+        console.log(phone)
+        const phoneName = document.getElementById("show-detailed-phone-name")
+        phoneName.innerHTML = phone.name;
+
+        const showDetailedContainer =  document.getElementById("show-detailed-container")
+        showDetailedContainer.innerHTML = `
+        <div>
+        
+        <section>
+            <div class="w-auto p-4 bg-white rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700">
+                <img src="${phone.image}"/>
+            </div>
+        </section>
+            `
+
+        // show the modal
+        show_details_modal.showModal()
+        console.log('Phone Details', phone)
+    }
+
+    // another way of doing
+// const handleShowDetail = async (id) => {
+//     try {
+//         console.log('Hehe boi', id);
+        
+//         // Load single phone data
+//         const res = await fetch(`https://openapi.programming-hero.com/api/phone/${id}`);
+//         const data = await res.json();
+//         console.log(data);
+
+//         // Pass the data to showPhoneDetails
+//         showPhoneDetails(data);
+//     } catch (error) {
+//         console.error('Error fetching phone details:', error);
+//     }
+// };
+
+// const showPhoneDetails = (phone) => {
+//     // Show the modal
+//     show_details_modal.showModal();
+
+//     // Add logic to display phone details in the modal
+//     console.log('Phone Details:', phone);
+// };
+
+
+// handle search button
+const handleSearch = (isShowAll) => {
+    const searchField = document.getElementById('search-field1')
+    const searchText = searchField.value;
+    console.log(searchText)
+    loadPhone(searchText, isShowAll);
+    toggleLoadingSpinner(true)
+}
+
+// const handleSearch2 = () =>{
+//     toggleLoadingSpinner(true)
+//     const searchField = document.getElementById('search-field2')
+//     const searchText = searchField.value;
+//     console.log(searchText)
+//     loadPhone(searchText)
+// }
+
+const toggleLoadingSpinner = (isLoading) => {
+    const loadingSpinner =  document.getElementById('loading-spinner')
+    if(isLoading){
+        loadingSpinner.classList.remove('hidden')
+    }
+    else{
+        loadingSpinner.classList.add('hidden')
+    }
+}
+
+// handle show all
+const handleShowAll = () =>{
+    handleSearch(true)
+}
+
+// document.getElementById('search-btn').addEventListener('click', () => {
+//     const searchField = document.getElementById('search-field1')
+//         const searchText = searchField.value;
+//         console.log(searchText)
+//         loadPhone(searchText)
+// })
+
 loadPhone()
+

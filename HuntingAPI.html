@@ -3,26 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="JS/tailwind.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@latest/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.23/dist/full.min.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="../path/to/flowbite/dist/flowbite.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
-    <title>Hunt The Phone API</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Hunt the Phone API</title>
 </head>
 <body>
+    
     <header class="text-6xl text-black font-bold text-center">
-        Hunting the Phones With API
+        Hunting the Phones <span class=""><br> With API</span>
     </header>
-    <main>
+    <main class="container mx-auto max-w-5xl">
+        
+        <section class="mt-10">
+<form class="max-w-md mx-auto">   
+    <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+    <div class="relative">
+        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+            </svg>
+        </div>
+        <input type="search" id="search-field1" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search for phones..." required />
+        <button onclick="handleSearch()" id="search-btn" type="button" class="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Look for Phone</button>
+    </div>
+</form>
+        </section>
+
+        <!-- Show Details modal -->
+        <section>
+            <!-- Open the modal using ID.showModal() method -->
+    <button class="btn" onclick="show_details_modal.showModal()">open modal</button>
+    <dialog id="show_details_modal" class="modal">
+    <div class="modal-box">
+    <h3 id="show-detailed-phone-name" class="text-lg font-bold"></h3>
+    <div id="show-detailed-container"></div>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+    </form>
+</dialog>   
+        </section>
+        
+<!--  another search field -->
+<!-- <section class="mt-5">
+    <form class="max-w-md mx-auto">   
+        <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+        <div class="relative">
+            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                </svg>
+            </div>
+            <input type="search" id="search-field2" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search for phones..." required />
+            <button onclick="handleSearch2()" id="search-btn2" type="button" class="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Look for Phone</button>
+        </div>
+    </form>
+</section> -->
+
+<!-- spinner or loader -->
+
+<div id="loading-spinner" class="text-center my-20 hidden">
+    <span class="loading text-primary loading-dots loading-lg "></span>
+</div>
+
+        <!-- search result -->
         <section>
             <div id="phone-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-10">
-                
+            </div>
+            <!-- show all  -->
+            <div class="text-center my-10">
+                <button onclick="handleShowAll()" id="show-all-container" type="button" class=" mt-10 text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 hidden">Show all</button>
             </div>
         </section>
     </main>
-    <footer></footer>
+    <footer>
+    </footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
     <script src="JS/index.js"></script>
 </body>
 </html>
